@@ -1,0 +1,10 @@
+[mysqld]            
+skip-host-cache     
+skip-name-resolve
+
+#russo
+
+[client]
+protocol=tcp
+
+#vicente 

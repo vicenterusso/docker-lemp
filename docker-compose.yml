@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql
+    container_name: lemp_mysql
+    volumes:
+      - dblaborsolo:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+  php:
+    build: php
+    container_name: lemp_php
+    volumes:
+      - ./www:/var/www
+    depends_on:
+      - mysql
+  nginx:
+    image: evild/alpine-nginx:1.9.15-openssl
+    container_name: lemp_nginx
+    links:
+      - php
+    volumes:
+      - ./www:/var/www/:ro
+      - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+    ports:
+      - 80:80
+      - 443:443 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lemp_phpmyadmin
+    links:
+      - mysql
+    ports:
+      - 8183:80
+    environment:
+      PMA_HOST: mysql
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: secret
+      
+volumes:
+  dblaborsolo:
