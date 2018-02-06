@@ -2,14 +2,17 @@ version: '3'
 
 services:
   mysql:
-    image: mysql
+    image: mysql:5.6
     container_name: lemp_mysql
     volumes:
-      - dblaborsolo:/var/lib/mysql
+      - ./www/dbdata:/usr/data
+      - ./mysql/conf.d:/etc/mysql/conf.d/
+      - ./mysql/mysql.conf.d:/etc/mysql/mysql.conf.d/
     environment:
       - MYSQL_ROOT_PASSWORD=secret
+    command: mysqld --sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
   php:
-    build: php
+    build: ./phpdocker-php70
     container_name: lemp_php
     volumes:
       - ./www:/var/www
@@ -38,6 +41,3 @@ services:
       PMA_HOST: mysql
       MYSQL_USERNAME: root
       MYSQL_ROOT_PASSWORD: secret
-      
-volumes:
-  dblaborsolo:
